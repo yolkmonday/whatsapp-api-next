@@ -1,8 +1,11 @@
 require('dotenv').config()
 const app = require('express')()
+const http = require('http');
+const server = http.createServer(app);
 const bodyParser = require('body-parser')
 const compression = require('compression')
 const Routes = require('./routes/index.route')
+
 app.use([compression(), bodyParser.json(), bodyParser.urlencoded({
   extended: true,
 })]);
@@ -16,6 +19,6 @@ app.get('/ping', (req, res) => {
   })
 })
 
-app.listen(process.env.PORT, () => {
+server.listen(process.env.PORT, () => {
   console.log("App runing on port :" + process.env.PORT);
 })
