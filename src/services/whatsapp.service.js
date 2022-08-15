@@ -7,7 +7,6 @@ const {
   phoneNumberFormatter
 } = require('../helper/formatter');
 
-
 const engine = (id) => new Client({
   restartOnAuthFail: true,
   authStrategy: new LocalAuth({
@@ -30,13 +29,11 @@ const engine = (id) => new Client({
 
 const createEngine = (phone) => {
   const bot = engine(phone)
-  console.log('Initialize for '+phone);
   bot.initialize()
   bot.on('qr', async (qr) => {
     console.log(qr);
   })
   return true
-
 }
 
 module.exports = { createEngine }
