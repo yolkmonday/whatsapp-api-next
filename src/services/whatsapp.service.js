@@ -27,13 +27,22 @@ const engine = (id) => new Client({
   },
 });
 
-const createEngine = (phone) => {
+const init = (phone) => {
   const bot = engine(phone)
   bot.initialize()
-  bot.on('qr', async (qr) => {
+  bot.on('qr', async(qr)=> {
     console.log(qr);
   })
   return true
 }
 
-module.exports = { createEngine }
+const createEngine = (phone) => {
+  const bot = engine(phone)
+  bot.initialize()
+  bot.on('qr', async (qr) => {
+    console.log({phone: qr});
+  })
+  return true
+}
+
+module.exports = { createEngine, init }

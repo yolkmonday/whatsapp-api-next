@@ -4,6 +4,7 @@ const engineController = require('../controller/engine.controller')
 
 // ENGINE
 router.post('/engine', engineController.create)
+router.get('/engine/init/:id', engineController.initEngine)
 router.delete('/engine/:id', engineController.deleteEngine)
 
 
