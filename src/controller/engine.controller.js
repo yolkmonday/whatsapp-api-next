@@ -1,4 +1,4 @@
-const { createEngine, init } = require("../services/whatsapp.service")
+const { createEngine, init, sendMessage } = require("../services/whatsapp.service")
 const fs = require('fs')
 const path = require('path')
 const { responseSuccess, responseError } = require("../helper/response")
@@ -19,6 +19,7 @@ const initEngine = async (req, res) => {
   try {
     // console.log(req.params);
     const initE = await init(req.params.id)
+    console.log(initE);
     if(initE) {
       return res.status(200).json(responseSuccess([],"Init engine success !"))
     }
@@ -49,4 +50,16 @@ const deleteEngine = (req,res) => {
   }
 }
 
-module.exports = { create, deleteEngine, initEngine }
+const sendEngine = async (req, res) => {
+  try {
+    const body = req.body
+    const send = await sendMessage(body.engine, body.phone, body.message)
+    if(send) {
+      return res.status(200).json(send)
+    }
+  } catch (error) {
+    
+  }
+}
+
+module.exports = { create, deleteEngine, initEngine, sendEngine }

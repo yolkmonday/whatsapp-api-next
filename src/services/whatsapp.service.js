@@ -7,6 +7,8 @@ const {
   phoneNumberFormatter
 } = require('../helper/formatter');
 
+const qrcode = require('qrcode');
+
 const engine = (id) => new Client({
   restartOnAuthFail: true,
   authStrategy: new LocalAuth({
@@ -26,12 +28,17 @@ const engine = (id) => new Client({
     ],
   },
 });
-
+// let phoneSocket = ''
 const init = (phone) => {
   const bot = engine(phone)
+  phoneSocket = phone
   bot.initialize()
   bot.on('qr', async(qr)=> {
-    console.log(qr);
+    const image = await qrcode.toDataURL(qr)
+    io.emit('qr-'+phone, {phone:phone,qr:qr, image: image})
+  })
+  bot.on('ready', async() =>{
+    io.emit('ready', "ready for rock " + phone)
   })
   return true
 }
@@ -42,7 +49,20 @@ const createEngine = (phone) => {
   bot.on('qr', async (qr) => {
     console.log({phone: qr});
   })
+
   return true
 }
 
-module.exports = { createEngine, init }
+const sendMessage = (engine, phone, message) => {
+  const bot = engine(engine)
+  const formatNumber = phoneNumberFormatter(phone)
+  // bot.initialize()
+  bot.on('ready', () => {
+    io.emit('ready-'+engine, 'im ready to send')
+    bot.sendMessage(formatNumber, message).then(response => {
+      return response
+    })
+  })
+}
+
+module.exports = { createEngine, init, sendMessage}
